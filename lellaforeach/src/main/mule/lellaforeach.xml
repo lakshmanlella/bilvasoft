@@ -63,5 +63,6 @@ VALUES (:studentid, :studentname, :studentnumber, :studentbob);]]></db:sql>
 	<flow name="lellaforeachFlow2" doc:id="41480371-4b90-417b-899d-07c16e2c34fc" >
 		<http:listener doc:name="Listener" doc:id="f9939062-3813-4590-9b77-8d076eb49eea" config-ref="HTTP_Listener_config" path="${http.path}"/>
 		<logger level="INFO" doc:name="Logger" doc:id="bd059d8c-490b-4810-8b37-75837358a751" message="this is lella"/>
+		<logger level="INFO" doc:name="Logger" doc:id="bd059d8c-490b-4810-8b37-75837358a751" message="this is lakshman"/>
 	</flow>
 </mule>
