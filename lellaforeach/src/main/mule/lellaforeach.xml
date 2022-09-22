@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="494963f3-222a-4939-82a1-97f576e0507b" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="1d65d116-1201-4ba5-baa6-c1fa8c1649fb" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="L@kshman05" database="db18"/>
+	</db:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="d0230928-52f2-4f2c-b9c1-29fc9b9df399" file="test.yaml" />
+	<flow name="lellaforeachFlow" doc:id="35e8bdbe-0571-4a12-bf63-8b508dbd3d51" >
+		<http:listener doc:name="Listener" doc:id="c019d4a5-01ec-4f5e-8689-5eda7934b5e2" config-ref="HTTP_Listener_config" path="foreach22"/>
+		<ee:transform doc:name="Transform Message" doc:id="ad15a884-1b0d-40ba-a602-b1eb2bf5750b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+ 1 to 50 map
+ {
+ 	studentid: 1+ $$,
+ 	studentname: "lakshman",
+ 	studentnumber: 7660077821,
+ 	studentlname: "lella"
+ }]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<parallel-foreach doc:name="Parallel For Each" doc:id="2ea29fbb-f88a-46ab-b169-bdd7b50b6e20" >
+			<logger level="INFO" doc:name="Logger" doc:id="ff5b5e0d-533f-4171-aadc-ded5e72ee166" message="#[payload]"/>
+		</parallel-foreach>
+	</flow>
+	<flow name="lellaforeachFlow1" doc:id="2ee2e42a-2d50-4dd6-9d3c-159632db5cae" >
+		<http:listener doc:name="Listener" doc:id="90a9332c-a45c-4def-98ac-ab34ee94e112" config-ref="HTTP_Listener_config" path="dbeach"/>
+		<ee:transform doc:name="Transform Message" doc:id="ceea203f-beb7-4c9e-a04d-94f8690fe67b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+1 to 200 map
+{
+	studentid: 200+ $$,
+	studentname: "lakshman",
+	studentnumber: 9959735773,
+	studentbob: "lella"
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="abebd2e0-a108-4847-8b7d-9b29a0b8e956" >
+			<logger level="INFO" doc:name="Logger" doc:id="f6cbfab0-fd12-42e3-85c9-5c05090da66e" message="#[payload]"/>
+			<db:insert doc:name="Insert" doc:id="434839ba-e110-468f-b4d4-0b421eeaaf96" config-ref="Database_Config">
+			<db:sql><![CDATA[INSERT INTO db18.student (studentid, studentname, studentnumber, studentbob)
+VALUES (:studentid, :studentname, :studentnumber, :studentbob);]]></db:sql>
+			<db:input-parameters><![CDATA[#[payload]]]></db:input-parameters>
+		</db:insert>
+		</foreach>
+		<logger level="INFO" doc:name="Logger" doc:id="c726b524-4e01-4286-afe7-2f7a01b89d61" message="#[payload]"/>
+	</flow>
+	<flow name="lellaforeachFlow2" doc:id="41480371-4b90-417b-899d-07c16e2c34fc" >
+		<http:listener doc:name="Listener" doc:id="f9939062-3813-4590-9b77-8d076eb49eea" config-ref="HTTP_Listener_config" path="${http.path}"/>
+		<logger level="INFO" doc:name="Logger" doc:id="bd059d8c-490b-4810-8b37-75837358a751" message="this is lella"/>
+	</flow>
+</mule>
